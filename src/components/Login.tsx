@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { KeyboardEvent } from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -8,7 +9,9 @@ import KeyIcon from "@mui/icons-material/Key";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 
+import { useNavigate } from "react-router-dom";
 import { app } from "../firebaseConfig";
+import { useAuthState } from "react-firebase-hooks/auth";
 import {
     getAuth,
     createUserWithEmailAndPassword,
@@ -16,21 +19,46 @@ import {
 } from "firebase/auth";
 
 const Login = () => {
+    const auth = getAuth(app);
     const [login, setLogin] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const auth = getAuth(app);
+    const [user, loading, error] = useAuthState(auth);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const keyDownHandler = (e: any) => {
+            if (e.key === "Enter") {
+                handleLogin(login, password);
+            }
+        };
+        document.addEventListener("keydown", keyDownHandler);
+
+        return () => {
+            document.removeEventListener("keydown", keyDownHandler);
+        };
+    });
+    useEffect(() => {
+        if (loading) {
+            return;
+        }
+        if (user) navigate("/playground");
+    }, [user, loading, navigate]);
 
     const handleLogin = (login: string, password: string) => {
         signInWithEmailAndPassword(auth, login, password)
             .then((userCredential) => {
                 const user = userCredential.user;
-                console.log(user);
+                navigate("/playground");
             })
             .catch((error) => {
-                const errorCode = error.code;
                 const errorMessage = error.message;
-                console.log(errorMessage);
+                console.error(errorMessage);
             });
+    };
+    const handleKeyPress = (e: KeyboardEvent): void => {
+        if (e.key === "Enter") {
+            handleLogin(login, password);
+        }
     };
 
     return (
@@ -92,7 +120,8 @@ const Login = () => {
                     variant='contained'
                     size='large'
                     sx={{ borderRadius: "15px", backgroundColor: "#7dcce5" }}
-                    onClick={() => handleLogin(login, password)}>
+                    onClick={() => handleLogin(login, password)}
+                    onKeyPress={(e) => handleKeyPress(e)}>
                     Login
                 </Button>
             </Stack>
