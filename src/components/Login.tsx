@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { KeyboardEvent } from "react";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -8,21 +6,21 @@ import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import KeyIcon from "@mui/icons-material/Key";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
+import Typography from "@mui/material/Typography";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { app } from "../firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-    getAuth,
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-} from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
     const auth = getAuth(app);
     const [login, setLogin] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [user, loading, error] = useAuthState(auth);
+    const [isOpen, setIsOpen] = useState<boolean>(false);
+    const [user, loading] = useAuthState(auth);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -47,18 +45,16 @@ const Login = () => {
     const handleLogin = (login: string, password: string) => {
         signInWithEmailAndPassword(auth, login, password)
             .then((userCredential) => {
-                const user = userCredential.user;
+                // const user = userCredential.user;
                 navigate("/playground");
             })
             .catch((error) => {
-                const errorMessage = error.message;
-                console.error(errorMessage);
+                setIsOpen(true);
             });
     };
-    const handleKeyPress = (e: KeyboardEvent): void => {
-        if (e.key === "Enter") {
-            handleLogin(login, password);
-        }
+
+    const handleClose = () => {
+        setIsOpen(false);
     };
 
     return (
@@ -120,11 +116,21 @@ const Login = () => {
                     variant='contained'
                     size='large'
                     sx={{ borderRadius: "15px", backgroundColor: "#7dcce5" }}
-                    onClick={() => handleLogin(login, password)}
-                    onKeyPress={(e) => handleKeyPress(e)}>
+                    onClick={() => handleLogin(login, password)}>
                     Login
                 </Button>
+
+                <p>Don't have an account yet?</p>
+
+                <Link to='/register'>
+                    <Typography sx={{ color: "black", textDecoration: "none" }}>
+                        Create an account
+                    </Typography>
+                </Link>
             </Stack>
+            <Dialog open={isOpen} onClose={handleClose}>
+                <DialogTitle>Something went wrong, try again</DialogTitle>
+            </Dialog>
         </Container>
     );
 };
