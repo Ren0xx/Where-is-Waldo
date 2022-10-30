@@ -3,18 +3,16 @@ import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app } from "../firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
+import Snackbar from "@mui/material/Snackbar";
 import InputAdornment from "@mui/material/InputAdornment";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import KeyIcon from "@mui/icons-material/Key";
-
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
 
 const Register = () => {
     const [login, setLogin] = useState<string>("");
@@ -33,9 +31,7 @@ const Register = () => {
 
     const handleUserRegistration = (login: string, password: string) => {
         createUserWithEmailAndPassword(auth, login, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-            })
+            .then((userCredential) => {})
             .catch((error) => {
                 setIsOpen(true);
             });
@@ -62,7 +58,14 @@ const Register = () => {
                 mb: 5,
                 height: "100vh",
                 backgroundColor: "#d4c9c3",
+                position: "relative",
             }}>
+            <Button
+                sx={{ position: "absolute", top: "0px", left: "0px" }}
+                startIcon={<ArrowBackIcon />}
+                onClick={() => navigate("/")}>
+                Go back
+            </Button>
             <Stack
                 spacing={5}
                 direction='column'
@@ -153,9 +156,11 @@ const Register = () => {
                     Create an account
                 </Button>
             </Stack>
-            <Dialog open={isOpen} onClose={handleClose}>
-                <DialogTitle>Account already exists for that email</DialogTitle>
-            </Dialog>
+            <Snackbar open={isOpen} onClose={handleClose}>
+                <Alert severity='error' sx={{ width: "100%" }}>
+                    This email is already taken.
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };

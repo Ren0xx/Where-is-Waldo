@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from "react";
-import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
-import InputAdornment from "@mui/material/InputAdornment";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import KeyIcon from "@mui/icons-material/Key";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Typography from "@mui/material/Typography";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
-import { useNavigate, Link } from "react-router-dom";
+import LoginForm from "../components/Login_Form";
+
+import { useNavigate} from "react-router-dom";
 import { app } from "../firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -50,6 +45,7 @@ const Login = () => {
             })
             .catch((error) => {
                 setIsOpen(true);
+                setPassword("");
             });
     };
 
@@ -67,70 +63,24 @@ const Login = () => {
                 height: "100vh",
                 backgroundColor: "#d4c9c3",
             }}>
-            <Stack
-                spacing={5}
-                direction='column'
-                component='form'
-                autoComplete='off'
-                sx={{
-                    backgroundColor: "#fff",
-                    padding: "3rem",
-                    width: "300px",
-                    height: "auto",
-                    borderRadius: "9px",
-                }}>
-                <TextField
-                    label='Email'
-                    id='outlined'
-                    required
-                    placeholder='Type your login'
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                                <MailOutlineIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={(event: any) => {
-                        setLogin(event.target.value);
-                    }}
-                />
-                <TextField
-                    id='outlined-password-input'
-                    label='Password'
-                    required
-                    placeholder='Type your password'
-                    type='password'
-                    InputProps={{
-                        startAdornment: (
-                            <InputAdornment position='start'>
-                                <KeyIcon />
-                            </InputAdornment>
-                        ),
-                    }}
-                    onChange={(event: any) => {
-                        setPassword(event.target.value);
-                    }}
-                />
-                <Button
-                    variant='contained'
-                    size='large'
-                    sx={{ borderRadius: "15px", backgroundColor: "#7dcce5" }}
-                    onClick={() => handleLogin(login, password)}>
-                    Login
-                </Button>
-
-                <p>Don't have an account yet?</p>
-
-                <Link to='/register'>
-                    <Typography sx={{ color: "black", textDecoration: "none" }}>
-                        Create an account
-                    </Typography>
-                </Link>
-            </Stack>
-            <Dialog open={isOpen} onClose={handleClose}>
-                <DialogTitle>Something went wrong, try again</DialogTitle>
-            </Dialog>
+            <LoginForm
+                login={login}
+                password={password}
+                handleLogin={handleLogin}
+                setLogin={setLogin}
+                setPassword={setPassword}
+            />
+            {/* <Dialog open={isOpen} onClose={handleClose}>
+                <DialogTitle>Wrong password</DialogTitle>
+                <Alert sx={{ backgroundColor: "#0bc000" }} severity='error'>
+                    Please try one more time.
+                </Alert>
+            </Dialog> */}
+            <Snackbar open={isOpen} onClose={handleClose}>
+                <Alert severity='error' sx={{ width: "100%" }}>
+                    Wrong password, please try again
+                </Alert>
+            </Snackbar>
         </Container>
     );
 };

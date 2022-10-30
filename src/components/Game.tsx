@@ -1,28 +1,20 @@
-import React, { useEffect } from "react";
-import Button from "@mui/material/Button";
-import { getAuth, signOut } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import "../styles/style.css";
+import { useMousePosition } from "../components/position";
+import { Container } from "@mui/material";
+import Circle from "../components/Circle";
+import photo from "../media/photo.jpg";
 const Game = () => {
-    const auth = getAuth();
-    const [user, loading, error] = useAuthState(auth);
-    const navigate = useNavigate();
-    useEffect(() => {
-        if (loading) {
-            return;
-        }
-        if (!user) {
-            return navigate("/");
-        }
-    }, [user, loading, navigate]);
-
+    const position = useMousePosition();
     return (
-        <div>
-            Game
-            <Button onClick={() => signOut(auth)} variant='contained'>
-                Logout
-            </Button>
-        </div>
+        <Container>
+            <div>
+                x:{position.x}
+                <br />
+                y:{position.y}
+            </div>
+            <img src={photo} className="backgroundImage"alt='...' />
+            <Circle />
+        </Container>
     );
 };
 
