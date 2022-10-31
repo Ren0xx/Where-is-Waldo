@@ -4,16 +4,23 @@ import { Container } from "@mui/material";
 import Circle from "../components/Circle";
 import photo from "../media/photo.jpg";
 const Game = () => {
-    const position = useMousePosition();
+    const localPosition = useMousePosition().localPosition;
+    const globalPosition = useMousePosition().globalPosition;
     return (
         <Container>
             <div>
-                x:{position.x}
+                x:{localPosition.x}
                 <br />
-                y:{position.y}
+                y:{localPosition.y}
             </div>
-            <img src={photo} className="backgroundImage"alt='...' />
-            <Circle />
+            <br />
+            <div>
+                x:{globalPosition.x}
+                <br />
+                y:{globalPosition.y}
+            </div>
+            <img src={photo} className='backgroundImage' alt='...' />
+            <Circle x={globalPosition.x} y={globalPosition.y} />
         </Container>
     );
 };
