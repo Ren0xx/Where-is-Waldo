@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 export const useMousePosition = () => {
+    const [visible, setVisible] = useState<boolean>(false);
     const [localPosition, setLocalPosition] = useState<{
         x: number;
         y: number;
@@ -17,7 +18,7 @@ export const useMousePosition = () => {
 
     useEffect(() => {
         const setFromEvent = (e: any) => {
-            if (e.target.id !== "circle") {
+            if (e.target.id !== "circle" && e.target.id === "background") {
                 setLocalPosition({
                     x:
                         e.clientX -
@@ -31,6 +32,7 @@ export const useMousePosition = () => {
                     y: e.clientY,
                 });
             }
+            setVisible(true);
         };
         window.addEventListener("click", setFromEvent);
 
@@ -38,5 +40,9 @@ export const useMousePosition = () => {
             window.removeEventListener("click", setFromEvent);
         };
     }, []);
-    return { localPosition, globalPosition };
+    return {
+        localPosition,
+        globalPosition,
+        visible: visible,
+    };
 };

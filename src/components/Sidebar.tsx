@@ -10,7 +10,7 @@ const Sidebar = () => {
             <Typography variant='h4'>Welcome</Typography>
             {user ? user.email : "anonymous"}
             <Button
-                sx={{ position: "fixed", top: 4, right: 4 }}
+                sx={{ position: "fixed", top: 4, right: 4, zIndex: 1000 }}
                 onClick={() => signOut(auth)}
                 variant='contained'>
                 Logout
