@@ -1,39 +1,59 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { app } from "../firebaseConfig";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { app, firestore } from "../firebaseConfig";
+
+import {
+    getAuth,
+    createUserWithEmailAndPassword,
+} from "firebase/auth";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import Alert from "@mui/material/Alert";
-import TextField from "@mui/material/TextField";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import Snackbar from "@mui/material/Snackbar";
-import InputAdornment from "@mui/material/InputAdornment";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import KeyIcon from "@mui/icons-material/Key";
+import { doc, setDoc } from "firebase/firestore";
+
+import {
+    Alert,
+    TextField,
+    Container,
+    Button,
+    Stack,
+    Snackbar,
+    InputAdornment,
+} from "@mui/material";
 
 const Register = () => {
+    const auth = getAuth(app);
+
     const [login, setLogin] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [password2, setPassword2] = useState<string>("");
     const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
-    const [isOpen, setIsOpen] = useState<boolean>(false);
-
-    const auth = getAuth(app);
+    const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
     const [user, loading] = useAuthState(auth);
     const navigate = useNavigate();
 
+    const createCollectionForUser = async (id: string, email: string) => {
+        await setDoc(doc(firestore, "users", id), {
+            bestCompletionTime: 0,
+            username: email,
+        });
+    };
+
     const handleClose = () => {
-        setIsOpen(false);
+        setIsErrorOpen(false);
     };
 
     const handleUserRegistration = (login: string, password: string) => {
         createUserWithEmailAndPassword(auth, login, password)
-            .then((userCredential) => {})
-            .catch((error) => {
-                setIsOpen(true);
+            .then((userCredential) => {
+                createCollectionForUser(
+                    userCredential.user.uid,
+                    userCredential.user.email || ""
+                );
+            })
+            .catch(() => {
+                setIsErrorOpen(true);
             });
     };
     useEffect(() => {
@@ -48,7 +68,7 @@ const Register = () => {
             return;
         }
         if (user) navigate("/playground");
-    }, [user, loading, navigate]);
+    }, [user, loading]);
     return (
         <Container
             sx={{
@@ -156,7 +176,7 @@ const Register = () => {
                     Create an account
                 </Button>
             </Stack>
-            <Snackbar open={isOpen} onClose={handleClose}>
+            <Snackbar open={isErrorOpen} onClose={handleClose}>
                 <Alert severity='error' sx={{ width: "100%" }}>
                     This email is already taken.
                 </Alert>

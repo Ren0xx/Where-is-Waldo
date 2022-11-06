@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
+import { Container, Snackbar, Alert } from "@mui/material";
 
 import LoginForm from "../components/Login_Form";
 
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { app } from "../firebaseConfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
@@ -39,8 +37,7 @@ const Login = () => {
 
     const handleLogin = (login: string, password: string) => {
         signInWithEmailAndPassword(auth, login, password)
-            .then((userCredential) => {
-                // const user = userCredential.user;
+            .then(() => {
                 navigate("/playground");
             })
             .catch((error) => {
