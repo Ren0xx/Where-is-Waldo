@@ -4,7 +4,7 @@ type TimeProps = {
     running: boolean;
 };
 const Stopwatch = (props: TimeProps) => {
-    const [time, setTime] = useState(0);
+    const [time, setTime] = useState();
     useEffect(() => {
         let interval: any = null;
         if (props.running) {
@@ -19,9 +19,7 @@ const Stopwatch = (props: TimeProps) => {
     return (
         <div className='stopwatch'>
             <div className='numbers'>
-                <span>
-                    {("0" + Math.floor((time / 3600) % 3600)).slice(-2)}:
-                </span>
+                <span>{("0" + Math.floor(time / 60)).slice(-2)}:</span>
                 <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
             </div>
         </div>
