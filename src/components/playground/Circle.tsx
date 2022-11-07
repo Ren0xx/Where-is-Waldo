@@ -12,13 +12,10 @@ const Circle = (props: Coordinates) => {
     return (
         <Box
             sx={{
-                borderRadius: "50%",
-                position: "absolute",
                 top: y - 25,
                 left: x - 25,
                 height: "50px",
                 width: "50px",
-                border: "2px solid blue",
                 visibility: visible ? "visible" : "hidden",
             }}
             className='circle'

@@ -2,7 +2,7 @@ import { Box, ListItemButton } from "@mui/material";
 
 type ItemProps = {
     name: string;
-    src: any;
+    src: string | undefined;
     handleChoice: (choice: string) => void;
 };
 const Item = (props: ItemProps) => {

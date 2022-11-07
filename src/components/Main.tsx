@@ -22,7 +22,7 @@ const Main = () => {
     return (
         <main className='layout'>
             <Sidebar currentUser={currentUser} />
-            <Game currentUser={currentUser} /> 
+            <Game />
         </main>
     );
 };

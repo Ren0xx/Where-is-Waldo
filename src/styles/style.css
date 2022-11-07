@@ -15,13 +15,7 @@
 }
 
 .gameContainer {
-    height: 1230px;
-    width: 1599px;
-    object-fit: cover;
-    background-repeat: no-repeat;
-    margin: 1.5rem;
-    margin-right: 80px;
-
+    position: relative;
 }
 
 .backgroundImage {
@@ -32,8 +26,7 @@
 }
 
 .circle {
+    position: absolute;
     border-radius: 50%;
-    height: 100px;
-    width: 100px;
     border: 2px solid blue;
 }

@@ -67,12 +67,6 @@ const Login = () => {
                 setLogin={setLogin}
                 setPassword={setPassword}
             />
-            {/* <Dialog open={isOpen} onClose={handleClose}>
-                <DialogTitle>Wrong password</DialogTitle>
-                <Alert sx={{ backgroundColor: "#0bc000" }} severity='error'>
-                    Please try one more time.
-                </Alert>
-            </Dialog> */}
             <Snackbar open={isOpen} onClose={handleClose}>
                 <Alert severity='error' sx={{ width: "100%" }}>
                     Wrong password, please try again

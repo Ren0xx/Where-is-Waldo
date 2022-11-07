@@ -1,28 +1,53 @@
 import "../../styles/style.css";
 import { useState, useEffect } from "react";
 import { useMousePosition } from "../../components/playground/position";
-
-import { Container } from "@mui/material";
-import Circle from "../../components/playground/Circle";
-import background from "../../media/background.png";
+import Circle from "./Circle";
+import CharacterLabel from "./CharacterLabel";
 import ChoiceMenu from "./ChoiceMenu";
-import { User as FirebaseUser } from "firebase/auth";
+import background from "../../media/background.png";
+import IMAGES from "./images";
 
-type CurrentUserProps = {
-    currentUser: FirebaseUser | null;
+type Character = {
+    name: string;
+    src: string;
+    found: boolean;
+    x: number;
+    y: number;
 };
-const Game = (props: CurrentUserProps) => {
 
-
-
-
-    const localPosition = useMousePosition().localPosition;
-    //for the backend
-
-    const globalPosition = useMousePosition().globalPosition;
+const Game = () => {
+    const [toFind, setToFind] = useState<Character[]>([
+        { name: "Waldo", src: IMAGES.waldo, found: false, x: 0, y: 0 },
+        { name: "Wilma", src: IMAGES.wilma, found: false, x: 0, y: 0 },
+        { name: "Wizard", src: IMAGES.wizard, found: false, x: 0, y: 0 },
+        { name: "Woof", src: IMAGES.woofTail, found: false, x: 0, y: 0 },
+        { name: "Odlaw", src: IMAGES.odlaw, found: false, x: 0, y: 0 },
+        { name: "Bone", src: IMAGES.bone, found: false, x: 0, y: 0 },
+        {
+            name: "Binoculars",
+            src: IMAGES.binoculars,
+            found: false,
+            x: 0,
+            y: 0,
+        },
+        { name: "Camera", src: IMAGES.camera, found: false, x: 0, y: 0 },
+        { name: "Key", src: IMAGES.key, found: false, x: 0, y: 0 },
+        { name: "Scroll", src: IMAGES.scroll, found: false, x: 0, y: 0 },
+    ]);
+    const position = useMousePosition().localPosition;
     const visibility = useMousePosition().visible;
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
+
+    const markFound = (name: string, x: number, y: number) => {
+        const newState = toFind.map((obj: Character) => {
+            if (obj.name === name) {
+                return { ...obj, found: true, x: x, y: y };
+            }
+            return obj;
+        });
+        setToFind(newState);
+    };
 
     useEffect(() => {
         const openDrawer = () => {
@@ -31,39 +56,41 @@ const Game = (props: CurrentUserProps) => {
         const background = document.getElementById("background");
         if (background) {
             background.addEventListener("click", openDrawer);
-        }
-        if (background) {
+
             return () => {
                 background.removeEventListener("click", openDrawer);
             };
         }
     }, [isOpen]);
     return (
-        <Container>
-            {/* <div>
-                x:{localPosition.x}
-                <br />
-                y:{localPosition.y}
-            </div> */}
-            {/* <br />
-            <div>
-                x:{globalPosition.x}
-                <br />
-                y:{globalPosition.y}
-            </div>  */}
+        <div className='gameContainer'>
             <img
                 id='background'
                 src={background}
                 className='backgroundImage'
                 alt='...'
             />
-            <Circle
-                x={globalPosition.x}
-                y={globalPosition.y}
-                visible={visibility}
+            <Circle x={position.x} y={position.y} visible={visibility} />
+            <ChoiceMenu
+                isOpen={isOpen}
+                setIsOpen={setIsOpen}
+                x={position.x}
+                y={position.y}
+                toFind={toFind}
+                markFound={markFound}
             />
-            <ChoiceMenu isOpen={isOpen} setIsOpen={setIsOpen} x={localPosition.x} y={localPosition.y}/>
-        </Container>
+            {toFind.map((obj) => {
+                return (
+                    <CharacterLabel
+                        key={obj.name}
+                        x={obj.x}
+                        y={obj.y}
+                        name={obj.name}
+                        visible={obj.found}
+                    />
+                );
+            })}
+        </div>
     );
 };
 

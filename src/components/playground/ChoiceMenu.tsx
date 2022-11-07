@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Item from "../playground/Item";
-import IMAGES from "./images";
 import { app, firestore } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 
@@ -10,38 +9,32 @@ type DrawerProps = {
     setIsOpen: any;
     x: number;
     y: number;
+    toFind: { name: string; src: string }[];
+    markFound: (name: string, x: number, y: number) => void;
 };
 const ChoiceMenu = (props: DrawerProps) => {
     const [choice, setChoice] = useState<string>("");
-    const toFind = [
-        { name: "Waldo", src: IMAGES.waldo },
-        { name: "Wilma", src: IMAGES.wilma },
-        { name: "Wizard", src: IMAGES.wizard },
-        { name: "Woof", src: IMAGES.woofTail },
-        { name: "Odlaw", src: IMAGES.odlaw },
-        { name: "Bone", src: IMAGES.bone },
-        { name: "Binoculars", src: IMAGES.binoculars },
-        { name: "Camera", src: IMAGES.camera },
-        { name: "Key", src: IMAGES.key },
-        { name: "Scroll", src: IMAGES.scroll },
-    ];
+
     const closeDrawer = () => {
         props.setIsOpen(false);
         setChoice("");
     };
+    const onConfirm = async (choice: string, x: number, y: number) => {
+        const position = await getCharacterPosition(choice);
+        if(checkIfHit(x, y, position.x, position.y)){
+            props.markFound(choice, x, y);
+        }
+        
+        closeDrawer();
 
-    const checkIfHit = (
-        x: number,
-        y: number,
-        originX: number,
-        originY: number
-    ) => {
-        const errorMargin = 40;
+    };
+    const checkIfHit = (x: number, y: number, charX: number, charY: number) => {
+        const errorMargin = 30;
         if (
-            x > originX - errorMargin &&
-            x < originX + errorMargin &&
-            y > originY - errorMargin &&
-            y < originY + errorMargin
+            x > charX - errorMargin &&
+            x < charX + errorMargin &&
+            y > charY - errorMargin &&
+            y < charY + errorMargin
         ) {
             alert(`You found ${choice}`);
             return true;
@@ -49,18 +42,19 @@ const ChoiceMenu = (props: DrawerProps) => {
         alert("Item not found");
         return false;
     };
-    const onChoiceSubmit = async (choice: string, x: number, y: number) => {
+    const getCharacterPosition = async (
+        choice: string
+    ): Promise<{ x: number; y: number }> => {
         const docRef = doc(firestore, "characters", choice);
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
-            const [originX, originY] = [
-                docSnap.data().position.x,
-                docSnap.data().position.y,
-            ];
-            checkIfHit(x, y, originX, originY);
-            console.log(x, y);
+            return {
+                x: docSnap.data().position.x,
+                y: docSnap.data().position.y,
+            };
         }
+        return { x: 0, y: 0 };
     };
     const handleChoice = (choice: string) => {
         setChoice(choice);
@@ -72,7 +66,7 @@ const ChoiceMenu = (props: DrawerProps) => {
                     <Typography variant='h6'>Choose a character</Typography>
                 </ListItem>
 
-                {toFind.map((item) => {
+                {props.toFind.map((item) => {
                     return (
                         <Item
                             key={item.name}
@@ -91,10 +85,8 @@ const ChoiceMenu = (props: DrawerProps) => {
                     <Button
                         disabled={choice !== "" ? false : true}
                         onClick={() => {
-                            closeDrawer();
-                            onChoiceSubmit(choice, props.x, props.y);
+                            onConfirm(choice, props.x, props.y);
                         }}
-                        value={choice}
                         variant='outlined'>
                         Confirm
                     </Button>
