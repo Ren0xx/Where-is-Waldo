@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Item from "../playground/Item";
-import { app, firestore } from "../../firebaseConfig";
+import { firestore } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-
+import "../../"
 import { Drawer, List, Button, Box, ListItem, Typography } from "@mui/material";
 type DrawerProps = {
     isOpen: boolean;
@@ -24,9 +24,7 @@ const ChoiceMenu = (props: DrawerProps) => {
         if(checkIfHit(x, y, position.x, position.y)){
             props.markFound(choice, x, y);
         }
-        
         closeDrawer();
-
     };
     const checkIfHit = (x: number, y: number, charX: number, charY: number) => {
         const errorMargin = 30;
