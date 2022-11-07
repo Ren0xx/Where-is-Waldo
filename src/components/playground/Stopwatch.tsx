@@ -4,7 +4,7 @@ type TimeProps = {
     running: boolean;
 };
 const Stopwatch = (props: TimeProps) => {
-    const [time, setTime] = useState();
+    const [time, setTime] = useState(0);
     useEffect(() => {
         let interval: any = null;
         if (props.running) {
