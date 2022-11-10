@@ -5,7 +5,6 @@ import Circle from "./Circle";
 import CharacterLabel from "./CharacterLabel";
 import ChoiceMenu from "./ChoiceMenu";
 import background from "../../media/background.png";
-import IMAGES from "./images";
 
 type Character = {
     name: string;
@@ -14,40 +13,16 @@ type Character = {
     x: number;
     y: number;
 };
+type GameProps = {
+    toFind: Character[];
+    markFound: (name: string, x: number, y: number) => void;
+};
 
-const Game = () => {
-    const [toFind, setToFind] = useState<Character[]>([
-        { name: "Waldo", src: IMAGES.waldo, found: false, x: 0, y: 0 },
-        { name: "Wilma", src: IMAGES.wilma, found: false, x: 0, y: 0 },
-        { name: "Wizard", src: IMAGES.wizard, found: false, x: 0, y: 0 },
-        { name: "Woof", src: IMAGES.woofTail, found: false, x: 0, y: 0 },
-        { name: "Odlaw", src: IMAGES.odlaw, found: false, x: 0, y: 0 },
-        { name: "Bone", src: IMAGES.bone, found: false, x: 0, y: 0 },
-        {
-            name: "Binoculars",
-            src: IMAGES.binoculars,
-            found: false,
-            x: 0,
-            y: 0,
-        },
-        { name: "Camera", src: IMAGES.camera, found: false, x: 0, y: 0 },
-        { name: "Key", src: IMAGES.key, found: false, x: 0, y: 0 },
-        { name: "Scroll", src: IMAGES.scroll, found: false, x: 0, y: 0 },
-    ]);
+const Game = (props: GameProps) => {
     const position = useMousePosition().localPosition;
     const visibility = useMousePosition().visible;
 
     const [isOpen, setIsOpen] = useState<boolean>(false);
-
-    const markFound = (name: string, x: number, y: number) => {
-        const newState = toFind.map((obj: Character) => {
-            if (obj.name === name) {
-                return { ...obj, found: true, x: x, y: y };
-            }
-            return obj;
-        });
-        setToFind(newState);
-    };
 
     useEffect(() => {
         const openDrawer = () => {
@@ -76,10 +51,10 @@ const Game = () => {
                 setIsOpen={setIsOpen}
                 x={position.x}
                 y={position.y}
-                toFind={toFind}
-                markFound={markFound}
+                toFind={props.toFind}
+                markFound={props.markFound}
             />
-            {toFind.map((obj) => {
+            {props.toFind.map((obj) => {
                 return (
                     <CharacterLabel
                         key={obj.name}

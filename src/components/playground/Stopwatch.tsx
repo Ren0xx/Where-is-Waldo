@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-
+import "../../styles/style.css";
 type TimeProps = {
     running: boolean;
 };
@@ -17,12 +17,12 @@ const Stopwatch = (props: TimeProps) => {
         return () => clearInterval(interval);
     }, [props.running]);
     return (
-        <div className='stopwatch'>
-            <div className='numbers'>
+        <span className='stopwatch'>
+            <span className='numbers'>
                 <span>{("0" + Math.floor(time / 60)).slice(-2)}:</span>
                 <span>{("0" + Math.floor(time % 60)).slice(-2)}</span>
-            </div>
-        </div>
+            </span>
+        </span>
     );
 };
 

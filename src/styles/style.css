@@ -1,13 +1,18 @@
 .layout {
     display: grid;
-    grid-template-columns: 1fr 8fr;
+    grid-template-columns: 2fr 8fr;
+}
+
+body {
+    background-color: #c8e6c9;
 }
 
 .sidebar {
     display: flex;
     flex-direction: column;
     row-gap: 2rem;
-    height: 98vh;
+    padding-left: 1.5rem;
+    padding-right: 1rem;
 }
 
 .logoutButton {
@@ -29,4 +34,11 @@
     position: absolute;
     border-radius: 50%;
     border: 2px solid blue;
+}
+
+.stopwatch {
+    color: #fafafa;
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    letter-spacing: 7px;
+
 }
