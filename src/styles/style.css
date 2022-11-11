@@ -49,7 +49,6 @@ body {
 .itemsList {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    border: 1px solid #25363b;
 }
 
 .item {

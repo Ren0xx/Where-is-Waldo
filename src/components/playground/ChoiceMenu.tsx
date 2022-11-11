@@ -2,7 +2,6 @@ import { useState } from "react";
 import Item from "../playground/Item";
 import { firestore } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import "../../";
 import {
     Drawer,
     List,

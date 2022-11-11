@@ -58,7 +58,7 @@ const Login = () => {
                 alignItems: "center",
                 mb: 5,
                 height: "100vh",
-                backgroundColor: "#d4c9c3",
+                backgroundColor: "#b7deb8",
             }}>
             <LoginForm
                 login={login}

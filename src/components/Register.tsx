@@ -63,7 +63,7 @@ const Register = () => {
             return;
         }
         if (user) navigate("/playground");
-    }, [user, loading]);
+    }, [user, loading, navigate]);
     return (
         <Container
             sx={{
@@ -72,11 +72,16 @@ const Register = () => {
                 alignItems: "center",
                 mb: 5,
                 height: "100vh",
-                backgroundColor: "#d4c9c3",
+                backgroundColor: "#b7deb8",
                 position: "relative",
             }}>
             <Button
-                sx={{ position: "absolute", top: "0px", left: "0px" }}
+                sx={{
+                    position: "absolute",
+                    top: "0px",
+                    left: "0px",
+                    color: "#4caf50",
+                }}
                 startIcon={<ArrowBackIcon />}
                 onClick={() => navigate("/")}>
                 Go back

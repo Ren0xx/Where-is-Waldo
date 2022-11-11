@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Game from "./playground/Game";
 import "../styles/style.css";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { firestore } from "../firebaseConfig";
 import IMAGES from "../components/playground/images";
 type Character = {
     name: string;
@@ -21,7 +23,7 @@ const Main = () => {
 
     const [time, setTime] = useState(0);
     const [running, setRunning] = useState<boolean>(true);
-
+    const [bestTime, setBestTime] = useState<string>("Unknown");
     const [toFind, setToFind] = useState<Character[]>([
         { name: "Waldo", src: IMAGES.waldo, found: true, x: 0, y: 0 },
         { name: "Wilma", src: IMAGES.wilma, found: true, x: 0, y: 0 },
@@ -54,11 +56,30 @@ const Main = () => {
             return { ...obj, found: false, x: 0, y: 0 };
         });
         setToFind(newState);
+        changeBestTimeIfShorter(time);
         setTime(0);
         setRunning(false);
     };
     const checkIfAllFound = (characters: Character[]) => {
         return characters.every((obj) => obj.found === true);
+    };
+    const getBestScore = async () => {
+        if (user) {
+            const docRef = doc(firestore, "users", user.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+                setBestTime(docSnap.data().bestCompletionTime);
+            }
+        }
+    };
+    const changeBestTimeIfShorter = async (time: number) => {
+        if (time < parseInt(bestTime) && user) {
+            const docRef = doc(firestore, "users", user.uid);
+            await updateDoc(docRef, {
+                bestCompletionTime: time,
+            });
+            setBestTime(time.toString());
+        }
     };
     useEffect(() => {
         if (loading) {
@@ -71,7 +92,8 @@ const Main = () => {
             alert(`you won your time was ${time}`);
             resetGame();
         }
-    }, [user, loading, navigate, toFind, time]);
+        getBestScore();
+    }, [user, loading, navigate, toFind, time, resetGame]);
     return (
         <main className='layout'>
             <Sidebar
@@ -80,6 +102,8 @@ const Main = () => {
                 toFind={toFind}
                 time={time}
                 setTime={setTime}
+                bestTime={bestTime}
+                setBestTime={setBestTime}
             />
             <Game toFind={toFind} markFound={markFound} />
         </main>

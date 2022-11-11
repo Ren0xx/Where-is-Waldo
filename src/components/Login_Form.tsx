@@ -1,10 +1,10 @@
 import React from "react";
 import {
     InputAdornment,
-    Button, 
-    Stack, 
-    Typography, 
-    TextField, 
+    Button,
+    Stack,
+    Typography,
+    TextField,
 } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import KeyIcon from "@mui/icons-material/Key";
@@ -73,7 +73,7 @@ const LoginForm = (props: LoginProps) => {
                 disabled={
                     props.login !== "" && props.password !== "" ? false : true
                 }
-                sx={{ borderRadius: "15px", backgroundColor: "#7dcce5" }}
+                sx={{ borderRadius: "15px", backgroundColor: "#4caf50" }}
                 onClick={() => props.handleLogin(props.login, props.password)}>
                 Login
             </Button>
