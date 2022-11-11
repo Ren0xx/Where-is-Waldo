@@ -33,7 +33,10 @@ body {
 .circle {
     position: absolute;
     border-radius: 50%;
-    border: 2px solid blue;
+    height: 7rem;
+    width: 7rem;
+    border: 5px dashed #dfa00b;
+    background-color: hsla(126.5, 69.8%, 55.9%, 0.71);
 }
 
 .stopwatch {

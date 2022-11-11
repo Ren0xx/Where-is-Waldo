@@ -13,13 +13,12 @@ import {
     Alert,
     Snackbar,
 } from "@mui/material";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 type DrawerProps = {
     isOpen: boolean;
     setIsOpen: any;
     x: number;
     y: number;
-    toFind: { name: string; src: string }[];
+    toFind: { name: string; src: string; found: boolean }[];
     markFound: (name: string, x: number, y: number) => void;
 };
 const ChoiceMenu = (props: DrawerProps) => {
@@ -90,6 +89,7 @@ const ChoiceMenu = (props: DrawerProps) => {
                                 src={item.src}
                                 name={item.name}
                                 handleChoice={handleChoice}
+                                found={item.found}
                             />
                         );
                     })}

@@ -16,7 +16,8 @@ type CurrentUserProps = {
     currentUser: FirebaseUser | null;
     running: boolean;
     toFind: Character[];
-    setRunning: () => void;
+    time: number;
+    setTime: (time: number) => void;
 };
 const Sidebar = (props: CurrentUserProps) => {
     const auth = getAuth();
@@ -39,7 +40,7 @@ const Sidebar = (props: CurrentUserProps) => {
                 }}>
                 <Typography variant='h5'>Time passed:</Typography>
                 <Typography variant='h5'>
-                    <Stopwatch running={props.running} />
+                    <Stopwatch time={props.time} setTime={props.setTime}running={props.running} />
                 </Typography>
             </Card>
             <Typography variant='subtitle2'>

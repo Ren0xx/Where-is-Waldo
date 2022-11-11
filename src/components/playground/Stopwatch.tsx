@@ -1,21 +1,23 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "../../styles/style.css";
 type TimeProps = {
     running: boolean;
+    time: number;
+    setTime: (time: any) => void;
 };
 const Stopwatch = (props: TimeProps) => {
-    const [time, setTime] = useState(0);
+    const { running, time, setTime } = props;
     useEffect(() => {
         let interval: any = null;
-        if (props.running) {
+        if (running) {
             interval = setInterval(() => {
-                setTime((prevTime) => prevTime + 1);
+                setTime((prevTime: number) => prevTime + 1);
             }, 1000);
-        } else if (!props.running) {
+        } else {
             clearInterval(interval);
         }
         return () => clearInterval(interval);
-    }, [props.running]);
+    }, [running, time, setTime]);
     return (
         <span className='stopwatch'>
             <span className='numbers'>
