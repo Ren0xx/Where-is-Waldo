@@ -2,9 +2,9 @@ import "../styles/style.css";
 import { useState } from "react";
 import Button from "@mui/material/Button";
 import { getAuth, signOut, User as FirebaseUser } from "firebase/auth";
-import { Typography, Card, Checkbox } from "@mui/material";
+import { Typography, Card, Avatar, Badge } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
 import Stopwatch from "./playground/Stopwatch";
-import Item from "./playground/Item";
 type Character = {
     name: string;
     src: string;
@@ -42,14 +42,28 @@ const Sidebar = (props: CurrentUserProps) => {
                     <Stopwatch running={props.running} />
                 </Typography>
             </Card>
-            <p>Your task is to find 5 characters and 5 items</p>
-            {props.toFind.map((obj) => {
-                return (
-                    <div key={obj.name}>
-                        {obj.name} <Checkbox checked={obj.found} />
-                    </div>
-                );
-            })}
+            <Typography variant='subtitle2'>
+                Your task is to find 5 characters and 5 items
+            </Typography>
+            <div className='itemsList'>
+                {props.toFind.map((obj) => {
+                    return (
+                        <div key={obj.name} className='item'>
+                            <Badge
+                                color='success'
+                                anchorOrigin={{
+                                    vertical: "bottom",
+                                    horizontal: "right",
+                                }}
+                                invisible={!obj.found}
+                                badgeContent={<CheckIcon />}>
+                                <Avatar src={obj.src} alt='..' />
+                            </Badge>
+                            <Typography variant='body1'>{obj.name}</Typography>
+                        </div>
+                    );
+                })}
+            </div>
             <Button
                 sx={{ position: "fixed", top: 4, right: 4, zIndex: 1000 }}
                 onClick={() => signOut(auth)}

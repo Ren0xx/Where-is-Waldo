@@ -2,8 +2,18 @@ import { useState } from "react";
 import Item from "../playground/Item";
 import { firestore } from "../../firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
-import "../../"
-import { Drawer, List, Button, Box, ListItem, Typography } from "@mui/material";
+import "../../";
+import {
+    Drawer,
+    List,
+    Button,
+    Box,
+    ListItem,
+    Typography,
+    Alert,
+    Snackbar,
+} from "@mui/material";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 type DrawerProps = {
     isOpen: boolean;
     setIsOpen: any;
@@ -14,14 +24,22 @@ type DrawerProps = {
 };
 const ChoiceMenu = (props: DrawerProps) => {
     const [choice, setChoice] = useState<string>("");
+    const [isSuccessTabOpen, setIsSuccessTabOpen] = useState<boolean>(false);
+    const [isFailedTabOpen, setIsFailedTabOpen] = useState<boolean>(false);
 
     const closeDrawer = () => {
         props.setIsOpen(false);
         setChoice("");
     };
+    const handleFailedTabClose = () => {
+        setIsFailedTabOpen(false);
+    };
+    const handleSuccessTabClose = () => {
+        setIsSuccessTabOpen(false);
+    };
     const onConfirm = async (choice: string, x: number, y: number) => {
         const position = await getCharacterPosition(choice);
-        if(checkIfHit(x, y, position.x, position.y)){
+        if (checkIfHit(x, y, position.x, position.y)) {
             props.markFound(choice, x, y);
         }
         closeDrawer();
@@ -34,10 +52,10 @@ const ChoiceMenu = (props: DrawerProps) => {
             y > charY - errorMargin &&
             y < charY + errorMargin
         ) {
-            alert(`You found ${choice}`);
+            setIsSuccessTabOpen(true);
             return true;
         }
-        alert("Item not found");
+        setIsFailedTabOpen(true);
         return false;
     };
     const getCharacterPosition = async (
@@ -58,45 +76,57 @@ const ChoiceMenu = (props: DrawerProps) => {
         setChoice(choice);
     };
     return (
-        <Drawer open={props.isOpen} anchor='right'>
-            <List sx={{ padding: "25px" }}>
-                <ListItem>
-                    <Typography variant='h6'>Choose a character</Typography>
-                </ListItem>
+        <>
+            <Drawer open={props.isOpen} anchor='right'>
+                <List sx={{ padding: "25px" }}>
+                    <ListItem>
+                        <Typography variant='h6'>Choose a character</Typography>
+                    </ListItem>
 
-                {props.toFind.map((item) => {
-                    return (
-                        <Item
-                            key={item.name}
-                            src={item.src}
-                            name={item.name}
-                            handleChoice={handleChoice}
-                        />
-                    );
-                })}
-                <ListItem> Selected: {choice} </ListItem>
-                <Box
-                    sx={{
-                        display: "flex",
-                        gap: "0.25rem",
-                    }}>
-                    <Button
-                        disabled={choice !== "" ? false : true}
-                        onClick={() => {
-                            onConfirm(choice, props.x, props.y);
-                        }}
-                        variant='outlined'>
-                        Confirm
-                    </Button>
-                    <Button
-                        variant='outlined'
-                        color='error'
-                        onClick={closeDrawer}>
-                        Cancel
-                    </Button>
-                </Box>
-            </List>
-        </Drawer>
+                    {props.toFind.map((item) => {
+                        return (
+                            <Item
+                                key={item.name}
+                                src={item.src}
+                                name={item.name}
+                                handleChoice={handleChoice}
+                            />
+                        );
+                    })}
+                    <ListItem> Selected: {choice} </ListItem>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            gap: "0.25rem",
+                        }}>
+                        <Button
+                            disabled={choice !== "" ? false : true}
+                            onClick={() => {
+                                onConfirm(choice, props.x, props.y);
+                            }}
+                            variant='outlined'>
+                            Confirm
+                        </Button>
+                        <Button
+                            variant='outlined'
+                            color='error'
+                            onClick={closeDrawer}>
+                            Cancel
+                        </Button>
+                    </Box>
+                </List>
+            </Drawer>
+            <Snackbar open={isSuccessTabOpen} onClose={handleSuccessTabClose}>
+                <Alert severity='success' sx={{ width: "100%" }}>
+                    You found something!
+                </Alert>
+            </Snackbar>
+            <Snackbar open={isFailedTabOpen} onClose={handleFailedTabClose}>
+                <Alert severity='error' sx={{ width: "100%" }}>
+                    Try again!
+                </Alert>
+            </Snackbar>
+        </>
     );
 };
 
