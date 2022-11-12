@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAuth } from "firebase/auth";
+import { getAuth, User } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -8,6 +8,8 @@ import "../styles/style.css";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import IMAGES from "../components/playground/images";
+import { Snackbar, Alert, CircularProgress } from "@mui/material";
+import Backdrop from "@mui/material/Backdrop";
 type Character = {
     name: string;
     src: string;
@@ -51,37 +53,41 @@ const Main = () => {
         });
         setToFind(newState);
     };
-    const resetGame = () => {
-        const newState = toFind.map((obj: Character) => {
-            return { ...obj, found: false, x: 0, y: 0 };
-        });
-        setToFind(newState);
-        changeBestTimeIfShorter(time);
-        setTime(0);
-        setRunning(false);
-    };
+
     const checkIfAllFound = (characters: Character[]) => {
         return characters.every((obj) => obj.found === true);
     };
-    const getBestScore = async () => {
-        if (user) {
-            const docRef = doc(firestore, "users", user.uid);
-            const docSnap = await getDoc(docRef);
-            if (docSnap.exists()) {
-                setBestTime(docSnap.data().bestCompletionTime);
-            }
+    const getBestScore = async (user: User) => {
+        const docRef = doc(firestore, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+            setBestTime(docSnap.data().bestCompletionTime);
         }
     };
-    const changeBestTimeIfShorter = async (time: number) => {
-        if (time < parseInt(bestTime) && user) {
-            const docRef = doc(firestore, "users", user.uid);
-            await updateDoc(docRef, {
-                bestCompletionTime: time,
-            });
-            setBestTime(time.toString());
-        }
-    };
+
     useEffect(() => {
+        if (!user) return;
+        getBestScore(user);
+    }, [user]);
+    useEffect(() => {
+        const changeBestTimeIfShorter = async (time: number) => {
+            if (time < parseInt(bestTime) && user) {
+                const docRef = doc(firestore, "users", user.uid);
+                await updateDoc(docRef, {
+                    bestCompletionTime: time,
+                });
+                setBestTime(time.toString());
+            }
+        };
+        const resetGame = () => {
+            const newState = toFind.map((obj: Character) => {
+                return { ...obj, found: false, x: 0, y: 0 };
+            });
+            setToFind(newState);
+            changeBestTimeIfShorter(time);
+            setTime(0);
+            setRunning(false);
+        };
         if (loading) {
             return;
         }
@@ -92,9 +98,8 @@ const Main = () => {
             alert(`you won your time was ${time}`);
             resetGame();
         }
-        getBestScore();
-    }, [user, loading, navigate, toFind, time, resetGame]);
-    return (
+    }, [user, loading, navigate, toFind, time, bestTime]);
+    return !loading ? (
         <main className='layout'>
             <Sidebar
                 currentUser={currentUser}
@@ -106,7 +111,16 @@ const Main = () => {
                 setBestTime={setBestTime}
             />
             <Game toFind={toFind} markFound={markFound} />
+            <Snackbar>
+                <Alert severity='success' sx={{ width: "100%" }}>
+                    You found something!
+                </Alert>
+            </Snackbar>
         </main>
+    ) : (
+        <Backdrop open={loading}>
+            <CircularProgress color='success' />
+        </Backdrop>
     );
 };
 
