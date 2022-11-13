@@ -20,8 +20,8 @@ type CurrentUserProps = {
     running: boolean;
     toFind: Character[];
     time: number;
-    bestTime: string;
-    setBestTime: (time: string) => void;
+    
+   
     setTime: (time: number) => void;
 };
 const Sidebar = (props: CurrentUserProps) => {
@@ -55,7 +55,6 @@ const Sidebar = (props: CurrentUserProps) => {
                 </Typography>
                 <Typography>
                     Your best score yet was: <br />
-                    {props.bestTime}
                 </Typography>
             </Card>
             <Card

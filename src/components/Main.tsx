@@ -25,7 +25,6 @@ const Main = () => {
 
     const [time, setTime] = useState(0);
     const [running, setRunning] = useState<boolean>(true);
-    const [bestTime, setBestTime] = useState<string>("Unknown");
     const [toFind, setToFind] = useState<Character[]>([
         { name: "Waldo", src: IMAGES.waldo, found: true, x: 0, y: 0 },
         { name: "Wilma", src: IMAGES.wilma, found: true, x: 0, y: 0 },
@@ -57,34 +56,20 @@ const Main = () => {
     const checkIfAllFound = (characters: Character[]) => {
         return characters.every((obj) => obj.found === true);
     };
-    const getBestScore = async (user: User) => {
-        const docRef = doc(firestore, "users", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-            setBestTime(docSnap.data().bestCompletionTime);
-        }
-    };
+    
 
     useEffect(() => {
         if (!user) return;
-        getBestScore(user);
+        
     }, [user]);
     useEffect(() => {
-        const changeBestTimeIfShorter = async (time: number) => {
-            if (time < parseInt(bestTime) && user) {
-                const docRef = doc(firestore, "users", user.uid);
-                await updateDoc(docRef, {
-                    bestCompletionTime: time,
-                });
-                setBestTime(time.toString());
-            }
-        };
+        
         const resetGame = () => {
             const newState = toFind.map((obj: Character) => {
                 return { ...obj, found: false, x: 0, y: 0 };
             });
             setToFind(newState);
-            changeBestTimeIfShorter(time);
+            
             setTime(0);
             setRunning(false);
         };
@@ -98,7 +83,7 @@ const Main = () => {
             alert(`you won your time was ${time}`);
             resetGame();
         }
-    }, [user, loading, navigate, toFind, time, bestTime]);
+    }, [user, loading, navigate, toFind, time]);
     return !loading ? (
         <main className='layout'>
             <Sidebar
@@ -107,8 +92,8 @@ const Main = () => {
                 toFind={toFind}
                 time={time}
                 setTime={setTime}
-                bestTime={bestTime}
-                setBestTime={setBestTime}
+                
+                
             />
             <Game toFind={toFind} markFound={markFound} />
             <Snackbar>
