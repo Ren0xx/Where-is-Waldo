@@ -53,9 +53,6 @@ const Sidebar = (props: CurrentUserProps) => {
                         running={props.running}
                     />
                 </Typography>
-                <Typography>
-                    Your best score yet was: <br />
-                </Typography>
             </Card>
             <Card
                 className='justify-content-center'

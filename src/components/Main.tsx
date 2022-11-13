@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAuth, User } from "firebase/auth";
+import { getAuth} from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -56,22 +56,26 @@ const Main = () => {
     const checkIfAllFound = (characters: Character[]) => {
         return characters.every((obj) => obj.found === true);
     };
-    
 
     useEffect(() => {
         if (!user) return;
-        
     }, [user]);
     useEffect(() => {
-        
+        const changeBestTimeIfShorter = async (time: number) => {
+            if (user) {
+                const docRef = doc(firestore, "users", user.uid);
+                await updateDoc(docRef, {
+                    bestCompletionTime: time,
+                });
+            }
+        };
         const resetGame = () => {
             const newState = toFind.map((obj: Character) => {
                 return { ...obj, found: false, x: 0, y: 0 };
             });
             setToFind(newState);
-            
-            setTime(0);
             setRunning(false);
+            setTime(-1);
         };
         if (loading) {
             return;
@@ -92,8 +96,6 @@ const Main = () => {
                 toFind={toFind}
                 time={time}
                 setTime={setTime}
-                
-                
             />
             <Game toFind={toFind} markFound={markFound} />
             <Snackbar>

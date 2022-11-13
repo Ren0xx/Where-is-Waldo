@@ -30,7 +30,7 @@ const Register = () => {
 
     const createCollectionForUser = async (id: string, email: string) => {
         await setDoc(doc(firestore, "users", id), {
-            bestCompletionTime: 0,
+            time: 0,
             username: email,
         });
     };
