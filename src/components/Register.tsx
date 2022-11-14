@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { app, firestore } from "../firebaseConfig";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
-import KeyIcon from "@mui/icons-material/Key";
 import { doc, setDoc } from "firebase/firestore";
+
+import {
+    ArrowBack,
+    MailOutline,
+    Key,
+    AccountCircle,
+} from "@mui/icons-material";
 import {
     Alert,
     TextField,
@@ -21,17 +25,24 @@ const Register = () => {
     const auth = getAuth(app);
 
     const [login, setLogin] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
     const [password2, setPassword2] = useState<string>("");
+
     const [isPasswordValid, setIsPasswordValid] = useState<boolean>(true);
     const [isErrorOpen, setIsErrorOpen] = useState<boolean>(false);
     const [user, loading] = useAuthState(auth);
     const navigate = useNavigate();
 
-    const createCollectionForUser = async (id: string, email: string) => {
+    const createCollectionForUser = async (
+        id: string,
+        email: string,
+        username: string
+    ) => {
         await setDoc(doc(firestore, "users", id), {
             time: 0,
-            username: email,
+            email: email,
+            username: login,
         });
     };
 
@@ -39,12 +50,17 @@ const Register = () => {
         setIsErrorOpen(false);
     };
 
-    const handleUserRegistration = (login: string, password: string) => {
+    const handleUserRegistration = (
+        login: string,
+        password: string,
+        username: string
+    ) => {
         createUserWithEmailAndPassword(auth, login, password)
             .then((userCredential) => {
                 createCollectionForUser(
                     userCredential.user.uid,
-                    userCredential.user.email || ""
+                    userCredential.user.email || "",
+                    username
                 );
             })
             .catch(() => {
@@ -82,7 +98,7 @@ const Register = () => {
                     left: "0px",
                     color: "#4caf50",
                 }}
-                startIcon={<ArrowBackIcon />}
+                startIcon={<ArrowBack />}
                 onClick={() => navigate("/")}>
                 Go back
             </Button>
@@ -99,19 +115,35 @@ const Register = () => {
                     borderRadius: "9px",
                 }}>
                 <TextField
-                    label='Email'
+                    label='Login'
                     id='outlined'
                     required
                     placeholder='Type your login'
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position='start'>
-                                <MailOutlineIcon />
+                                <AccountCircle />
                             </InputAdornment>
                         ),
                     }}
                     onChange={(event: any) => {
                         setLogin(event.target.value);
+                    }}
+                />
+                <TextField
+                    label='Email'
+                    id='outlined'
+                    required
+                    placeholder='Type your email'
+                    InputProps={{
+                        startAdornment: (
+                            <InputAdornment position='start'>
+                                <MailOutline />
+                            </InputAdornment>
+                        ),
+                    }}
+                    onChange={(event: any) => {
+                        setEmail(event.target.value);
                     }}
                 />
                 <TextField
@@ -128,7 +160,7 @@ const Register = () => {
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position='start'>
-                                <KeyIcon />
+                                <Key />
                             </InputAdornment>
                         ),
                     }}
@@ -155,7 +187,7 @@ const Register = () => {
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position='start'>
-                                <KeyIcon />
+                                <Key />
                             </InputAdornment>
                         ),
                     }}
@@ -172,13 +204,15 @@ const Register = () => {
                             : false
                     }
                     sx={{ borderRadius: "15px", backgroundColor: "#7dcce5" }}
-                    onClick={() => handleUserRegistration(login, password)}>
+                    onClick={() =>
+                        handleUserRegistration(email, password, login)
+                    }>
                     Create an account
                 </Button>
             </Stack>
             <Snackbar open={isErrorOpen} onClose={handleClose}>
                 <Alert severity='error' sx={{ width: "100%" }}>
-                    This email is already taken.
+                    This email is already taken or incorrect.
                 </Alert>
             </Snackbar>
         </Container>

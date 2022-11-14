@@ -48,7 +48,9 @@ const LeaderBoard = () => {
                         <p>{player.time}</p>
                     </div>
                 ) : (
-                    <CircularProgress />
+                    <Backdrop open={isLoading}>
+                        <CircularProgress />
+                    </Backdrop>
                 );
             })}
         </>
