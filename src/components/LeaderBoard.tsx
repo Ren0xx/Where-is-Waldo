@@ -19,7 +19,7 @@ const LeaderBoard = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const getData = async () => {
         const q = query(collection(firestore, "leaderboard"));
-        const scoreDocs = onSnapshot(q, (querySnapshot) => {
+        onSnapshot(q, (querySnapshot) => {
             const playersList: Player[] = [];
             querySnapshot.forEach((doc) => {
                 const obj = {

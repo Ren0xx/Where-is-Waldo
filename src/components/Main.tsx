@@ -19,7 +19,6 @@ type Character = {
 };
 const Main = () => {
     const auth = getAuth();
-    const currentUser = auth.currentUser;
     const [user, loading] = useAuthState(auth);
     const navigate = useNavigate();
 
@@ -58,9 +57,6 @@ const Main = () => {
     };
 
     useEffect(() => {
-        if (!user) return;
-    }, [user]);
-    useEffect(() => {
         const changeBestTimeIfShorter = async (time: number) => {
             if (user) {
                 const docRef = doc(firestore, "users", user.uid);
@@ -91,7 +87,6 @@ const Main = () => {
     return !loading ? (
         <main className='layout'>
             <Sidebar
-                currentUser={currentUser}
                 running={running}
                 toFind={toFind}
                 time={time}

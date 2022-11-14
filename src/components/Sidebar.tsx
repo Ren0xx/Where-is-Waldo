@@ -1,12 +1,13 @@
 import "../styles/style.css";
 import Button from "@mui/material/Button";
-import { getAuth, signOut, User as FirebaseUser } from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import { Typography, Card, Avatar, Badge, CardHeader } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import Stopwatch from "./playground/Stopwatch";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { firestore } from "../firebaseConfig";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 type Character = {
     name: string;
@@ -16,23 +17,18 @@ type Character = {
     y: number;
 };
 type CurrentUserProps = {
-    currentUser: FirebaseUser | null;
     running: boolean;
     toFind: Character[];
     time: number;
-    
-   
     setTime: (time: number) => void;
 };
 const Sidebar = (props: CurrentUserProps) => {
     const auth = getAuth();
-    const user = props.currentUser;
     return (
         <div className='sidebar'>
             <Typography variant='h3' color='#1b5e20'>
                 Welcome
             </Typography>
-            {user ? user.email : "anonymous"}
             <br />
 
             <Card
@@ -87,6 +83,13 @@ const Sidebar = (props: CurrentUserProps) => {
                 onClick={() => signOut(auth)}
                 variant='contained'>
                 Logout
+            </Button>
+            <Button
+                variant='contained'
+                color='success'
+                component={Link}
+                to={"/leaderboard"}>
+                Go to Leaderboard
             </Button>
         </div>
     );

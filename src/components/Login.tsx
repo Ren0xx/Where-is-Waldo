@@ -40,7 +40,7 @@ const Login = () => {
             .then(() => {
                 navigate("/playground");
             })
-            .catch((error) => {
+            .catch(() => {
                 setIsOpen(true);
                 setPassword("");
             });

@@ -13,8 +13,8 @@ import { Link } from "react-router-dom";
 type LoginProps = {
     login: string;
     password: string;
-    setLogin: (event: any) => void;
-    setPassword: (event: any) => void;
+    setLogin: (event: React.SetStateAction<string>) => void;
+    setPassword: (event: React.SetStateAction<string>) => void;
     handleLogin: (login: string, password: string) => void;
 };
 
@@ -45,7 +45,7 @@ const LoginForm = (props: LoginProps) => {
                         </InputAdornment>
                     ),
                 }}
-                onChange={(event: any) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     props.setLogin(event.target.value);
                 }}
             />
@@ -63,7 +63,7 @@ const LoginForm = (props: LoginProps) => {
                         </InputAdornment>
                     ),
                 }}
-                onChange={(event: any) => {
+                onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                     props.setPassword(event.target.value);
                 }}
             />

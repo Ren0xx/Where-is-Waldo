@@ -37,7 +37,7 @@ const Register = () => {
     const createCollectionForUser = async (
         id: string,
         email: string,
-        username: string
+        login: string
     ) => {
         await setDoc(doc(firestore, "users", id), {
             time: 0,
@@ -126,7 +126,7 @@ const Register = () => {
                             </InputAdornment>
                         ),
                     }}
-                    onChange={(event: any) => {
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setLogin(event.target.value);
                     }}
                 />
@@ -142,7 +142,7 @@ const Register = () => {
                             </InputAdornment>
                         ),
                     }}
-                    onChange={(event: any) => {
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setEmail(event.target.value);
                     }}
                 />
@@ -164,7 +164,7 @@ const Register = () => {
                             </InputAdornment>
                         ),
                     }}
-                    onChange={(event: any) => {
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setPassword(event.target.value);
                     }}
                 />
@@ -191,7 +191,7 @@ const Register = () => {
                             </InputAdornment>
                         ),
                     }}
-                    onChange={(event: any) => {
+                    onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
                         setPassword2(event.target.value);
                     }}
                 />
