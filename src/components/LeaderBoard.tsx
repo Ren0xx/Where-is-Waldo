@@ -2,12 +2,14 @@ import { useEffect, useState } from "react";
 import { firestore } from "../firebaseConfig";
 import { Snackbar, Alert, CircularProgress } from "@mui/material";
 import Backdrop from "@mui/material/Backdrop";
+import DataTable from "./DataTable";
 import {
     collection,
     query,
     where,
     onSnapshot,
     limit,
+    orderBy,
 } from "firebase/firestore";
 
 type Player = {
@@ -18,7 +20,10 @@ const LeaderBoard = () => {
     const [players, setPlayers] = useState<Player[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const getData = async () => {
-        const q = query(collection(firestore, "leaderboard"));
+        const q = query(
+            collection(firestore, "leaderboard"),
+            orderBy("time", "asc")
+        );
         onSnapshot(q, (querySnapshot) => {
             const playersList: Player[] = [];
             querySnapshot.forEach((doc) => {
@@ -41,18 +46,7 @@ const LeaderBoard = () => {
     }, []);
     return (
         <>
-            {players?.map((player: Player) => {
-                return !isLoading ? (
-                    <div key={player.username}>
-                        <p>{player.username}</p>
-                        <p>{player.time}</p>
-                    </div>
-                ) : (
-                    <Backdrop open={isLoading}>
-                        <CircularProgress />
-                    </Backdrop>
-                );
-            })}
+            <DataTable players={players} />
         </>
     );
 };
