@@ -15,23 +15,24 @@ import {
 type Player = {
     username: string;
     time: number;
+    email: string;
 };
 const LeaderBoard = () => {
     const [players, setPlayers] = useState<Player[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const getData = async () => {
-        const q = query(
-            collection(firestore, "leaderboard"),
-            orderBy("time", "asc")
-        );
+        const q = query(collection(firestore, "users"), orderBy("time", "asc"));
         onSnapshot(q, (querySnapshot) => {
             const playersList: Player[] = [];
             querySnapshot.forEach((doc) => {
                 const obj = {
                     username: doc.data().username,
                     time: doc.data().time,
+                    email: doc.data().email,
                 };
-                playersList.push(obj);
+                if (doc.data().time !== 0) {
+                    playersList.push(obj);
+                }
             });
             setPlayers(playersList);
             setIsLoading(false);

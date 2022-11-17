@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getAuth} from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./Sidebar";
@@ -59,10 +59,14 @@ const Main = () => {
     useEffect(() => {
         const changeBestTimeIfShorter = async (time: number) => {
             if (user) {
+                console.log(user);
                 const docRef = doc(firestore, "users", user.uid);
-                await updateDoc(docRef, {
-                    bestCompletionTime: time,
-                });
+                const docSnap = await getDoc(docRef);
+                if (docSnap.exists() && time < docSnap.data().time) {
+                    await updateDoc(docRef, {
+                        time: time,
+                    });
+                }
             }
         };
         const resetGame = () => {
@@ -71,7 +75,8 @@ const Main = () => {
             });
             setToFind(newState);
             setRunning(false);
-            setTime(-1);
+            changeBestTimeIfShorter(time);
+            setTime(0);
         };
         if (loading) {
             return;
