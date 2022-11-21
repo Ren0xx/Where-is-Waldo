@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/Where-is-Waldo/static/css/main.95a7a08e.css",
-    "main.js": "/Where-is-Waldo/static/js/main.f0d86e66.js",
+    "main.js": "/Where-is-Waldo/static/js/main.d4212913.js",
     "static/media/background.png": "/Where-is-Waldo/static/media/background.78fce1696eccd44c82b7.png",
     "static/media/wilma.png": "/Where-is-Waldo/static/media/wilma.a2b9d0b8f91b60d4fa9c.png",
     "static/media/wizard.png": "/Where-is-Waldo/static/media/wizard.9a5861c3590766396886.png",
@@ -9,10 +9,10 @@
     "static/media/camera.png": "/Where-is-Waldo/static/media/camera.8f50fc0a51bc1970cf2e.png",
     "index.html": "/Where-is-Waldo/index.html",
     "main.95a7a08e.css.map": "/Where-is-Waldo/static/css/main.95a7a08e.css.map",
-    "main.f0d86e66.js.map": "/Where-is-Waldo/static/js/main.f0d86e66.js.map"
+    "main.d4212913.js.map": "/Where-is-Waldo/static/js/main.d4212913.js.map"
   },
   "entrypoints": [
     "static/css/main.95a7a08e.css",
-    "static/js/main.f0d86e66.js"
+    "static/js/main.d4212913.js"
   ]
 }
