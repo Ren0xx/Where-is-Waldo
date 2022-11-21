@@ -1,14 +1,11 @@
 import { useEffect, useState } from "react";
 import { firestore } from "../firebaseConfig";
-import { Snackbar, Alert, CircularProgress } from "@mui/material";
-import Backdrop from "@mui/material/Backdrop";
+import { Backdrop, CircularProgress } from "@mui/material";
 import DataTable from "./DataTable";
 import {
     collection,
     query,
-    where,
     onSnapshot,
-    limit,
     orderBy,
 } from "firebase/firestore";
 
@@ -45,10 +42,12 @@ const LeaderBoard = () => {
             getData();
         };
     }, []);
-    return (
-        <>
-            <DataTable players={players} />
-        </>
+    return !isLoading ? (
+        <DataTable players={players} />
+    ) : (
+        <Backdrop open={isLoading}>
+            <CircularProgress color='success' />
+        </Backdrop>
     );
 };
 

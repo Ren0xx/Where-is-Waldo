@@ -4,9 +4,6 @@ import { getAuth, signOut } from "firebase/auth";
 import { Typography, Card, Avatar, Badge, CardHeader } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
 import Stopwatch from "./playground/Stopwatch";
-import { doc, getDoc, setDoc } from "firebase/firestore";
-import { firestore } from "../firebaseConfig";
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 type Character = {
@@ -35,7 +32,7 @@ const Sidebar = (props: CurrentUserProps) => {
                 sx={{
                     display: "flex",
                     gap: "2rem",
-                    backgroundColor: "#212121",
+                    backgroundColor: "#2e7d32",
                     color: "#fafafa",
                     padding: "6px",
                     flexDirection: "column",
@@ -81,6 +78,7 @@ const Sidebar = (props: CurrentUserProps) => {
             <Button
                 sx={{ position: "fixed", top: 4, right: 4, zIndex: 1000 }}
                 onClick={() => signOut(auth)}
+                color='success'
                 variant='contained'>
                 Logout
             </Button>

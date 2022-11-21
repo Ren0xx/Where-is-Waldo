@@ -25,12 +25,21 @@ type UserData = {
 const DataTable = (props: UserData) => {
     const navigate = useNavigate();
     const { players } = props;
+    const formatTime = (time: number) => {
+        const m = Math.floor((time % 3600) / 60)
+                .toString()
+                .padStart(2, "0"),
+            s = Math.floor(time % 60)
+                .toString()
+                .padStart(2, "0");
+        return `${m}:${s}`;
+    };
     return (
         <TableContainer component={Paper} sx={{ marginTop: 5 }}>
             <Table aria-label='score-table'>
                 <TableHead>
                     <TableRow>
-                        <TableCell align='center' colSpan={3}>
+                        <TableCell align='center' colSpan={2}>
                             <Typography variant='h3'>Best Scores</Typography>
                         </TableCell>
                     </TableRow>
@@ -39,7 +48,7 @@ const DataTable = (props: UserData) => {
                             <Typography variant='h5'>Name</Typography>
                         </TableCell>
                         <TableCell align='center'>
-                            <Typography variant='h5'>Time&nbsp; (s)</Typography>
+                            <Typography variant='h5'>Time</Typography>
                         </TableCell>
                     </TableRow>
                 </TableHead>
@@ -49,7 +58,9 @@ const DataTable = (props: UserData) => {
                             <TableCell align='center'>
                                 {player.username}
                             </TableCell>
-                            <TableCell align='center'>{player.time}</TableCell>
+                            <TableCell align='center'>
+                                {formatTime(player.time)}
+                            </TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

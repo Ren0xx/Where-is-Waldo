@@ -198,12 +198,13 @@ const Register = () => {
                 <Button
                     variant='contained'
                     size='large'
+                    color='success'
                     disabled={
                         password !== password2 || !isPasswordValid
                             ? true
                             : false
                     }
-                    sx={{ borderRadius: "15px", backgroundColor: "#7dcce5" }}
+                    sx={{ borderRadius: "15px" }}
                     onClick={() =>
                         handleUserRegistration(email, password, login)
                     }>

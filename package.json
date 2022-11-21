@@ -1,6 +1,7 @@
 {
   "name": "photo-tagging-app",
   "version": "0.1.0",
+  "homepage": "https://ren0xx.github.io/Where-is-Waldo/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.10.4",

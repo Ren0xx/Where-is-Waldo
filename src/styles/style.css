@@ -27,14 +27,14 @@ body {
     position: relative;
     height: 900px;
     width: auto;
-    border: 2px solid rgb(106, 106, 204);
+    border: 0.5em solid hsl(274deg 30% 25% / 61%)
 }
 
 .circle {
     position: absolute;
     border-radius: 50%;
-    height: 7rem;
-    width: 7rem;
+    height: 3rem;
+    width: 3rem;
     border: 5px dashed #dfa00b;
     background-color: hsla(126.5, 69.8%, 55.9%, 0.71);
 }

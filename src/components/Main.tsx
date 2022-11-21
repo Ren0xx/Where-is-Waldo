@@ -21,25 +21,25 @@ const Main = () => {
     const auth = getAuth();
     const [user, loading] = useAuthState(auth);
     const navigate = useNavigate();
-
+    const [winningLabelOpen, setWinningLabelOpen] = useState<boolean>(false);
     const [time, setTime] = useState(0);
     const [running, setRunning] = useState<boolean>(true);
     const [toFind, setToFind] = useState<Character[]>([
-        { name: "Waldo", src: IMAGES.waldo, found: true, x: 0, y: 0 },
-        { name: "Wilma", src: IMAGES.wilma, found: true, x: 0, y: 0 },
-        { name: "Wizard", src: IMAGES.wizard, found: true, x: 0, y: 0 },
-        { name: "Woof", src: IMAGES.woofTail, found: true, x: 0, y: 0 },
-        { name: "Odlaw", src: IMAGES.odlaw, found: true, x: 0, y: 0 },
-        { name: "Bone", src: IMAGES.bone, found: true, x: 0, y: 0 },
+        { name: "Waldo", src: IMAGES.waldo, found: false, x: 0, y: 0 },
+        { name: "Wilma", src: IMAGES.wilma, found: false, x: 0, y: 0 },
+        { name: "Wizard", src: IMAGES.wizard, found: false, x: 0, y: 0 },
+        { name: "Woof", src: IMAGES.woofTail, found: false, x: 0, y: 0 },
+        { name: "Odlaw", src: IMAGES.odlaw, found: false, x: 0, y: 0 },
+        { name: "Bone", src: IMAGES.bone, found: false, x: 0, y: 0 },
         {
             name: "Binoculars",
             src: IMAGES.binoculars,
-            found: true,
+            found: false,
             x: 0,
             y: 0,
         },
-        { name: "Camera", src: IMAGES.camera, found: true, x: 0, y: 0 },
-        { name: "Key", src: IMAGES.key, found: true, x: 0, y: 0 },
+        { name: "Camera", src: IMAGES.camera, found: false, x: 0, y: 0 },
+        { name: "Key", src: IMAGES.key, found: false, x: 0, y: 0 },
         { name: "Scroll", src: IMAGES.scroll, found: false, x: 0, y: 0 },
     ]);
     const markFound = (name: string, x: number, y: number) => {
@@ -51,9 +51,22 @@ const Main = () => {
         });
         setToFind(newState);
     };
-
+    const handleLabelClose = () => {
+        setWinningLabelOpen(false);
+        setTime(0);
+        setRunning(true);
+    };
     const checkIfAllFound = (characters: Character[]) => {
         return characters.every((obj) => obj.found === true);
+    };
+    const formatTime = (time: number) => {
+        const m = Math.floor((time % 3600) / 60)
+                .toString()
+                .padStart(2, "0"),
+            s = Math.floor(time % 60)
+                .toString()
+                .padStart(2, "0");
+        return `${m}:${s}`;
     };
 
     useEffect(() => {
@@ -62,7 +75,10 @@ const Main = () => {
                 console.log(user);
                 const docRef = doc(firestore, "users", user.uid);
                 const docSnap = await getDoc(docRef);
-                if (docSnap.exists() && time < docSnap.data().time) {
+                if (
+                    docSnap.exists() &&
+                    (time < docSnap.data().time || docSnap.data().time === 0)
+                ) {
                     await updateDoc(docRef, {
                         time: time,
                     });
@@ -76,7 +92,6 @@ const Main = () => {
             setToFind(newState);
             setRunning(false);
             changeBestTimeIfShorter(time);
-            setTime(0);
         };
         if (loading) {
             return;
@@ -85,7 +100,7 @@ const Main = () => {
             return navigate("/");
         }
         if (checkIfAllFound(toFind)) {
-            alert(`you won your time was ${time}`);
+            setWinningLabelOpen(true);
             resetGame();
         }
     }, [user, loading, navigate, toFind, time]);
@@ -98,9 +113,16 @@ const Main = () => {
                 setTime={setTime}
             />
             <Game toFind={toFind} markFound={markFound} />
-            <Snackbar>
-                <Alert severity='success' sx={{ width: "100%" }}>
-                    You found something!
+            <Snackbar
+                open={winningLabelOpen}
+                onClose={handleLabelClose}
+                anchorOrigin={{ horizontal: "center", vertical: "top" }}>
+                <Alert
+                    severity='success'
+                    variant='filled'
+                    sx={{ width: "100%" }}>
+                    You've won! Your time was:{" "}
+                    {<strong> {formatTime(time)}</strong>}
                 </Alert>
             </Snackbar>
         </main>
