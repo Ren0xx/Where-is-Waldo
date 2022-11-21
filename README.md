@@ -12,7 +12,7 @@ Game created with React(Typescript).
 -   [Material UI](https://mui.com/)
 -   [Firebase](https://firebase.google.com/)
 
-I used Firebase as BaaS for this project. It is a really powerfull and beginner friendly 'tool'.
+I used Firebase as BaaS for this project. It is a really powerful and beginner friendly 'tool'.
 
 Creating new user is quite simple - you have to do that in order to play the game.
 ![obraz](https://user-images.githubusercontent.com/74071928/203097475-0243db0e-fb26-4006-9d36-711b97c9ef64.png)
