@@ -7,6 +7,7 @@ Game created with React.js(Typescript).
 ## Built with
 
 -   [React](https://reactjs.org/)
+-   [Typescript](https://www.typescriptlang.org/)
 -   [React Router](https://reactrouter.com/)
 -   [Material UI](https://mui.com/)
 -   [Firebase](https://firebase.google.com/)
