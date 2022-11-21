@@ -18,3 +18,5 @@ Creating new user is quite simple - you have to do that in order to play the gam
 At this point, you can only play one board.
 ![obraz](https://user-images.githubusercontent.com/74071928/203097039-0d3e201f-b4d2-4e56-9655-bb4db23bafc4.png)
 
+You can compare your score with other players!
+![obraz](https://user-images.githubusercontent.com/74071928/203098856-e47b0327-32ed-495a-9581-7e5c4a62a529.png)
