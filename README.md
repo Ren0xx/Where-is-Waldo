@@ -1,7 +1,5 @@
 # Where's Waldo Game
 
-Game created with React(Typescript).
-
 [Live Demo](https://ren0xx.github.io/Where-is-Waldo/) :point_left:
 
 ## Built with
